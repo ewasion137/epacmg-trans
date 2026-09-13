@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EquantOS Package Gateway (trans)</title>
+</head>
+<body style="font-family: monospace; padding: 20px; background: #111; color: #0f0;">
+    <h2>[ EQUANT-OS PACKAGE REPOSITORY GATEWAY ]</h2>
+    <p>Status: ONLINE | Target: x86_64-elf-musl | Format: .epkg</p>
+    <hr style="border-color: #333;">
+    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; border-color: #333; width: 100%;">
+        <thead>
+            <tr style="background: #222;">
+                <th>Package</th>
+                <th>Version</th>
+                <th>Size</th>
+                <th>Description</th>
+                <th>Download Link</th>
+            </tr>
+        </thead>
+        <tbody id="pkg-list">
+            <tr><td colspan="5">Loading repository index...</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        fetch('packages.txt')
+            .then(res => res.text())
+            .then(data => {
+                const tbody = document.getElementById('pkg-list');
+                tbody.innerHTML = '';
+                data.trim().split('\n').forEach(line => {
+                    if (!line || line.startsWith('#')) return;
+                    const [name, ver, size, url, desc] = line.split('|');
+                    const row = `<tr>
+                        <td><b>${name}</b></td>
+                        <td>${ver}</td>
+                        <td>${(size / 1024).toFixed(1)} KB</td>
+                        <td>${desc}</td>
+                        <td><a href="${url}" style="color: #0ff;">${url.split('/').pop()}</a></td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            })
+            .catch(err => {
+                document.getElementById('pkg-list').innerHTML = `<tr><td colspan="5" style="color:red;">Error loading manifest: ${err}</td></tr>`;
+            });
+    </script>
+</body>
+</html>
