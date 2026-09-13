@@ -1,0 +1,1 @@
+neofetch|1.0.0|16384|https://raw.githubusercontent.com/ewasion137/epacmg-repo/main/pkgs/neofetch.epkg|EquantOS Fast CLI System Info
